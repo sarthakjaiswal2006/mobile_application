@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -9,17 +10,17 @@ const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
   return (
     <Stack.Navigator
-  screenOptions={{
-    headerStyle: {
-      backgroundColor: '#000000',
-    },
-    headerTintColor: '#FFFFFF',
-    headerTitleStyle: {
-      fontWeight: 'bold',
-    },
-    headerShadowVisible: false,
-  }}
->
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#000000',
+        },
+        headerTintColor: '#FFFFFF',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+        headerShadowVisible: false,
+      }}
+    >
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -29,7 +30,9 @@ export default function AppNavigator() {
       <Stack.Screen
         name="Chat"
         component={ChatScreen}
-        options={{ title: 'Conversation' }}
+        options={({ route }) => ({
+          title: route.params?.chat?.name || 'Conversation',
+        })}
       />
     </Stack.Navigator>
   );
