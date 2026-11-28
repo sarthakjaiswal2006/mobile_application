@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+
 import {
   View,
   Text,
@@ -10,6 +11,8 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+
+import MessageBubble from '../components/MessageBubble';
 
 export default function ChatScreen({ route }) {
   const { chat } = route.params;
@@ -54,20 +57,6 @@ export default function ChatScreen({ route }) {
     setMessage('');
   };
 
-  const renderMessage = ({ item }) => (
-    <View
-      style={[
-        styles.messageBubble,
-        item.sender === 'me'
-          ? styles.myMessage
-          : styles.otherMessage,
-      ]}
-    >
-      <Text style={styles.messageText}>{item.text}</Text>
-      <Text style={styles.time}>{item.time}</Text>
-    </View>
-  );
-
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -76,7 +65,9 @@ export default function ChatScreen({ route }) {
     >
       <FlatList
         data={messages}
-        renderItem={renderMessage}
+        renderItem={({ item }) => (
+          <MessageBubble message={item} />
+        )}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.messageList}
       />
@@ -109,29 +100,6 @@ const styles = StyleSheet.create({
   messageList: {
     padding: 15,
     gap: 12,
-  },
-  messageBubble: {
-    maxWidth: '80%',
-    padding: 12,
-    borderRadius: 15,
-  },
-  myMessage: {
-    alignSelf: 'flex-end',
-    backgroundColor: '#075E46',
-  },
-  otherMessage: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#252730',
-  },
-  messageText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-  },
-  time: {
-    color: '#B9C5BF',
-    fontSize: 10,
-    marginTop: 5,
-    textAlign: 'right',
   },
   inputContainer: {
     flexDirection: 'row',
