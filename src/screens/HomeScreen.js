@@ -1,4 +1,6 @@
-import React from 'react';
+
+import React, { useState } from 'react';
+
 import {
   View,
   Text,
@@ -11,6 +13,17 @@ import { chats } from '../data/chats';
 import ChatItem from '../components/ChatItem';
 
 export default function HomeScreen({ navigation }) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredChats = chats.filter(chat => {
+    const query = searchQuery.toLowerCase().trim();
+
+    return (
+      chat.name.toLowerCase().includes(query) ||
+      chat.lastMessage.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Messages</Text>
@@ -19,11 +32,13 @@ export default function HomeScreen({ navigation }) {
         placeholder="Search conversations..."
         placeholderTextColor="#888"
         style={styles.search}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
       />
 
       <FlatList
-        data={chats}
-        keyExtractor={(item) => item.id}
+        data={filteredChats}
+        keyExtractor={item => item.id}
         renderItem={({ item }) => (
           <ChatItem
             chat={item}
@@ -32,6 +47,11 @@ export default function HomeScreen({ navigation }) {
             }
           />
         )}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>
+            No conversations found.
+          </Text>
+        }
       />
     </View>
   );
@@ -57,5 +77,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: 15,
     marginBottom: 12,
+  },
+  emptyText: {
+    color: '#888888',
+    textAlign: 'center',
+    marginTop: 40,
+    fontSize: 15,
   },
 });
